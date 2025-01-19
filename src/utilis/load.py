@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 import numpy as np
 from PIL import Image
+from datetime import datetime
 
 def load_csv():
     styles_metadata = pd.read_csv("data/raw/styles.csv", delimiter=';').set_index("id")
