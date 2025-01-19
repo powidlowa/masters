@@ -2,6 +2,7 @@ import logging
 import requests
 import torch
 from torchvision import models
+from datetime import datetime
 
 # loading pretrained ConvNeXT
 def download_weights():
@@ -13,7 +14,7 @@ def download_weights():
     response = requests.get(url)
     with open(weights_path, "wb") as f:
         f.write(response.content)
-    logging.info(f'weights saved:{weights_path}')
+    logging.info(f'{datetime.now()}: weights saved: {weights_path}')
 
     return weights_path
 
@@ -21,6 +22,6 @@ def init_convnext_model(weights_path):
     # load the model with the downloaded weights
     model = models.convnext_base()
     model.load_state_dict(torch.load(weights_path, weights_only=True))
-    logging.info('model loaded')
+    logging.info(f'{datetime.now()}: model loaded')
 
     return model
