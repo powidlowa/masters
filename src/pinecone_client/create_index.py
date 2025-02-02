@@ -1,4 +1,5 @@
-import os
+import logging
+from datetime import datetime
 from pinecone import ServerlessSpec 
 
 def create_index(pc, INDEX_NAME, INDEX_DIMENSION):
@@ -11,6 +12,7 @@ def create_index(pc, INDEX_NAME, INDEX_DIMENSION):
                 region='us-east-1'
             )
         )
+        logging.info(f'{datetime.now()}: index created')
     index = pc.Index(INDEX_NAME)
 
     return index

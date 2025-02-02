@@ -15,11 +15,11 @@ def return_embeddings(
         image_path = image_address_dictionary[image_id]
         image = Image.open(image_path)
         # add batch dimension
-        input_tensor = preprocesser(image).unsqueeze(0) 
+        input_tensor = preprocesser(image).unsqueeze(0)
         with torch.no_grad():
             embedding = feature_extractor(input_tensor)
         # flatten the embedding to get a 1D vector
-        embedding_vectors[int(image_id)] = embedding.flatten()
+        embedding_vectors[int(image_id)] = embedding.flatten().tolist()
     logging.info(f'{datetime.now()}: embeddings generated')
 
     return embedding_vectors

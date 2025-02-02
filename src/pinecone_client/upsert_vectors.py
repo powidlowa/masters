@@ -8,9 +8,9 @@ def upsert_index(index, embedding_vectors, styles_metadata):
         tmp_dict = {
             "id": str(k),
             "values": v,
-            "metadata": metadata_dictionary[k]
+            "metadata": metadata_dictionary[int(k)]
         }
         vectors_to_upsert.append(tmp_dict)
 
     index.upsert(vectors=vectors_to_upsert)
-    logging.info(f'{datetime.now()}: len(vectors_to_upsert) vectors upserted')
+    logging.info(f'{datetime.now()}: {len(vectors_to_upsert)} vectors upserted')

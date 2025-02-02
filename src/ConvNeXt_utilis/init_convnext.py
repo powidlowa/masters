@@ -5,17 +5,20 @@ from torchvision import models
 from datetime import datetime
 
 # loading pretrained ConvNeXT
-def download_weights():
-    # link to base weights
-    url = "https://download.pytorch.org/models/convnext_base-6075fbad.pth"
+def download_weights(is_wieghts_file_available):
 
-    # download the weights
     weights_path = "models/ConvNeXt_weights/convnext_base.pth"
-    response = requests.get(url)
-    with open(weights_path, "wb") as f:
-        f.write(response.content)
-    logging.info(f'{datetime.now()}: weights saved: {weights_path}')
+    
+    if not is_wieghts_file_available:
+        # link to base weights
+        url = "https://download.pytorch.org/models/convnext_base-6075fbad.pth"
 
+        # download the weights
+        response = requests.get(url)
+        with open(weights_path, "wb") as f:
+            f.write(response.content)
+        logging.info(f'{datetime.now()}: weights saved: {weights_path}')
+        
     return weights_path
 
 def init_convnext_model(weights_path):
