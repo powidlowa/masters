@@ -3,7 +3,7 @@ import json
 import random
 import uuid
 import logging
-import pickle
+import argparse
 from datetime import datetime
 
 from src.ConvNeXt_utilis.init_convnext import (
@@ -17,6 +17,10 @@ from src.pinecone_client.init_pinecone import init_pinecone
 
 logging.basicConfig(filename="masters.log", level=logging.INFO)
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--gender', help='gender of the search: male, female, unisex')
+args = parser.parse_args()
+
 INDEX_NAME=os.getenv("INDEX_NAME")
 
 #dowload weigts
@@ -28,8 +32,8 @@ preprocesser = preprocess_image()
 
 responses = {}
 for _ in range (0, 10):
-    images = os.listdir("data/query/images")
-    query_image = f"data/query/images/{random.choice(images)}"
+    images = os.listdir(f"data/query/images/{args.gender}")
+    query_image = f"data/query/images/{args.gender}/{random.choice(images)}"
     generated_id = uuid.uuid4().int
 
     image_address_dictionary = {generated_id:query_image}
@@ -41,10 +45,18 @@ for _ in range (0, 10):
     )
     pc = init_pinecone()
     index = pc.Index(INDEX_NAME)
-    response = index.query(vector=embedding_query[generated_id], top_k=4, include_values=True).to_dict()
+    response = index.query(
+        vector=embedding_query[generated_id], 
+        top_k=4,
+        include_values=False,
+        includeMetadata=True,
+        filter={'gender': args.gender}
+    ).to_dict()
+    response["query_image"] = query_image
     response["generated_id"] = generated_id
-    with open(f'data/query/responses/{generated_id}_response.json', 'w') as file:
+    with open(f'data/query/responses/{args.gender}/{generated_id}_response.json', 'w') as file:
         json.dump(response, file)
+
     #responses_json = {generated_id:json.dumps(response.to_dict())}
     #with open(f'data/query/responses/{generated_id}_response.json', 'w') as file:
     #    json.dump(responses_json, file)
