@@ -30,6 +30,13 @@ model = init_convnext_model(convnext_weights)
 feature_extractor = return_feature_extractor(model)
 preprocesser = preprocess_image()
 
+mapping_gender = {
+    'female':'Women',
+    'male':'Men',
+    'unisex':'Unisex',
+    'boys':'Boys',
+    'girls':'Girls'
+}
 responses = {}
 for _ in range (0, 10):
     images = os.listdir(f"data/query/images/{args.gender}")
@@ -50,7 +57,7 @@ for _ in range (0, 10):
         top_k=4,
         include_values=False,
         includeMetadata=True,
-        filter={'gender': args.gender}
+        filter={'gender': mapping_gender[args.gender]}
     ).to_dict()
     response["query_image"] = query_image
     response["generated_id"] = generated_id
