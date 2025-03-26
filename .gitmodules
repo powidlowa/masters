@@ -1,3 +1,0 @@
-[submodule "models/ConvNeXt"]
-	path = models/ConvNeXt
-	url = https://github.com/facebookresearch/ConvNeXt.git
